@@ -1936,7 +1936,9 @@
   ────────────────────────────── */
   // Generer ICS for en oppgave med fast 1-dag-før-påminnelse (brukes ved auto-eksport)
   function genererICSFraOppgave(o) {
-    const dtstart = `DTSTART;VALUE=DATE:${o.frist.replace(/-/g, '')}`;
+    // Sett hendelsen til kl. 07:00 på fristen – TRIGGER:-P1D gir påminnelse kl. 07:00 dagen før
+    const dtstart = `DTSTART;TZID=Europe/Oslo:${o.frist.replace(/-/g, '')}T070000`;
+    const dtend   = `DTEND;TZID=Europe/Oslo:${o.frist.replace(/-/g, '')}T070100`;
     const now     = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
     let besk = '';
     if (o.aktivitetId) {
@@ -1954,6 +1956,7 @@
       `UID:${o.id}@lagplan`,
       `DTSTAMP:${now}`,
       dtstart,
+      dtend,
       `SUMMARY:${o.beskrivelse}`,
       besk,
       'BEGIN:VALARM',
