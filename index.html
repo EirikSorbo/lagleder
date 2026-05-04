@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lagplan</title>
+  <title>Laglederen</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -903,7 +903,7 @@
 <header>
   <div class="logo">
     <div class="logo-ikon">⚽</div>
-    Lagplan
+    Laglederen
   </div>
 </header>
 
@@ -962,7 +962,7 @@
     <div class="kort-container" id="oppgaveListe"></div>
   </div>
 
-  <div class="versjon">v.1.00</div>
+  <div class="versjon">v.1.01</div>
 </main>
 
 <!-- Modal: Aktivitet -->
@@ -1966,7 +1966,7 @@
     return [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//Lagplan//NO',
+      'PRODID:-//Laglederen//NO',
       'CALSCALE:GREGORIAN',
       'BEGIN:VEVENT',
       `UID:${o.id}@lagplan`,
@@ -1978,7 +1978,7 @@
       'BEGIN:VALARM',
       'TRIGGER:-P1D',
       'ACTION:DISPLAY',
-      'DESCRIPTION:Påminnelse fra Lagplan',
+      'DESCRIPTION:Påminnelse fra Laglederen',
       'END:VALARM',
       'END:VEVENT',
       'END:VCALENDAR'
@@ -2059,7 +2059,7 @@
     return [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//Lagplan//NO',
+      'PRODID:-//Laglederen//NO',
       'CALSCALE:GREGORIAN',
       'BEGIN:VEVENT',
       `UID:${o.id}@lagplan`,
@@ -2070,7 +2070,7 @@
       'BEGIN:VALARM',
       triggerLinje,
       'ACTION:DISPLAY',
-      'DESCRIPTION:Påminnelse fra Lagplan',
+      'DESCRIPTION:Påminnelse fra Laglederen',
       'END:VALARM',
       'END:VEVENT',
       'END:VCALENDAR'
