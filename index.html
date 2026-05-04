@@ -38,15 +38,36 @@
     header {
       background: var(--hvit);
       border-bottom: 1px solid var(--kant);
-      padding: 0 24px;
+      padding: 0 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       height: 58px;
       position: sticky;
       top: 0;
       z-index: 100;
     }
+
+    .header-handlinger {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .header-knapp {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--rs);
+      border: 1px solid var(--kant);
+      background: var(--hvit);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--tekst-sek);
+      transition: all .15s;
+    }
+    .header-knapp:hover { background: var(--grønn-lys); color: var(--grønn); border-color: var(--grønn-mid); }
 
     .logo {
       font-family: 'Syne', sans-serif;
@@ -905,6 +926,15 @@
     <div class="logo-ikon">⚽</div>
     Laglederen
   </div>
+  <div class="header-handlinger">
+    <button class="header-knapp" onclick="eksporterData()" title="Eksporter data">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1v9M4 7l3.5 3.5L11 7M2 12h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="header-knapp" onclick="document.getElementById('importInput').click()" title="Importer data">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 14V5M4 8.5L7.5 5 11 8.5M2 3h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <input type="file" id="importInput" accept=".json" style="display:none" onchange="importerData(this)"/>
+  </div>
 </header>
 
 <nav class="faner">
@@ -962,7 +992,7 @@
     <div class="kort-container" id="oppgaveListe"></div>
   </div>
 
-  <div class="versjon">v.1.01</div>
+  <div class="versjon">v.1.02</div>
 </main>
 
 <!-- Modal: Aktivitet -->
@@ -2088,6 +2118,54 @@
     document.body.removeChild(el);
     URL.revokeObjectURL(url);
   }
+  /* ──────────────────────────────
+     IMPORT / EKSPORT
+  ────────────────────────────── */
+  function eksporterData() {
+    const payload = {
+      versjon: '1.02',
+      eksportert: new Date().toISOString(),
+      aktiviteter,
+      oppgaver
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const el   = document.createElement('a');
+    el.href     = url;
+    el.download = 'laglederen-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(el);
+    el.click();
+    document.body.removeChild(el);
+    URL.revokeObjectURL(url);
+  }
+
+  function importerData(input) {
+    const fil = input.files[0];
+    if (!fil) return;
+    const leser = new FileReader();
+    leser.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!Array.isArray(data.aktiviteter) || !Array.isArray(data.oppgaver)) {
+          alert('Filen ser ikke ut til å være en gyldig Laglederen-eksport.'); return;
+        }
+        const bekreft = confirm(
+          'Dette vil erstatte alle eksisterende aktiviteter og oppgaver med dataene fra filen.\n\nFortsette?'
+        );
+        if (!bekreft) return;
+        aktiviteter = data.aktiviteter;
+        oppgaver    = data.oppgaver;
+        lagre();
+        oppdaterAktivPanel();
+        alert('✓ Data importert.');
+      } catch {
+        alert('Kunne ikke lese filen. Sjekk at det er en gyldig .json-fil.');
+      }
+    };
+    leser.readAsText(fil);
+    input.value = ''; // reset så samme fil kan importeres igjen
+  }
+
   /* ──────────────────────────────
      INIT
   ────────────────────────────── */
